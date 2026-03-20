@@ -1,108 +1,120 @@
-# nmapVisualizer
+# portScan
 
-A lightweight, browser-based tool for visualizing Nmap scan results in a structured, human-readable format.
+A simple and lightweight Bash script for scanning open ports on a target host.
 
-This project provides a simple HTML interface for parsing and displaying Nmap output, making it easier to analyze hosts, ports, and services without manually digging through raw scan data.
+Designed for quick checks and basic enumeration, `portScan.sh` provides an easy way to identify open TCP ports without relying on heavy tools.
 
 ---
 
 ## Overview
 
-`nmapVisualizer` is a standalone HTML application designed to transform Nmap scan results into an interactive and readable format directly in your browser.
+`portScan` is a minimal port scanning utility written in Bash. It allows you to:
 
-It is ideal for:
+* Scan a target IP or hostname
+* Identify open ports
+* Optionally define custom port ranges
 
-* Penetration testers
-* Security researchers
-* Network administrators
-* Anyone working with Nmap output
-
-No backend, installation, or dependencies are required — just open the file and use it.
+This tool is useful for quick reconnaissance, troubleshooting, and learning how port scanning works at a low level.
 
 ---
 
 ## Features
 
-* Parses Nmap scan output for easy analysis
-* Displays hosts, open ports, and services in a structured layout
-* Fully client-side (no data leaves your browser)
-* Simple and fast — no setup required
-* Portable single-file tool
+* Fast and lightweight Bash implementation
+* Scans TCP ports on a given host
+* Supports custom port ranges
+* No external dependencies beyond standard system tools
+* Easy to modify and extend
 
 ---
 
 ## Requirements
 
-* A modern web browser (Chrome, Firefox, Edge, etc.)
-* Nmap scan output (typically XML or compatible format)
+* Bash (Linux/macOS or WSL)
+* Basic networking utilities (e.g., `/dev/tcp`, `nc`, or similar depending on implementation)
 
 ---
 
 ## Usage
 
-1. Run an Nmap scan and save the output:
+Make the script executable:
 
-   ```bash
-   nmap -oX scan.xml <target>
-   ```
+```bash
+chmod +x portScan.sh
+```
 
-2. Open the visualizer:
+Run a basic scan:
 
-   * Open `nmapVisualizer.html` in your browser
+```bash
+./portScan.sh <target>
+```
 
-3. Load your scan:
+Scan with a custom port range:
 
-   * Paste or upload your Nmap output (depending on UI)
-   * View parsed results instantly
+```bash
+./portScan.sh <target> <start_port> <end_port>
+```
 
 ---
 
-## Example Workflow
+## Examples
 
 ```bash
-nmap -sC -sV -oX results.xml 10.10.10.10
+./portScan.sh 192.168.1.1
+./portScan.sh example.com 1 1024
+./portScan.sh 10.10.10.10 20 80
 ```
 
-Then:
+---
 
-* Open the HTML file
-* Load `results.xml`
-* Explore hosts, ports, and services visually
+## Output
+
+The script typically returns a list of open ports and associated services (if detectable), for example:
+
+```
+PORT     STATE    SERVICE
+22/tcp   open     ssh
+80/tcp   open     http
+443/tcp  open     https
+```
 
 ---
 
 ## How It Works
 
-* Parses Nmap XML data in the browser using JavaScript
-* Converts raw scan data into structured objects
-* Renders results dynamically in the UI
+* Iterates through a range of ports
+* Attempts to establish a TCP connection to each port
+* Reports ports that respond as open
+* Optionally maps ports to known services
 
-Because everything runs client-side, your scan data remains private and is never uploaded.
-
----
-
-## Project Structure
-
-```
-nmapVisualizer.html   # Main application file
-```
+This approach is similar to other Bash-based scanners that rely on system-level networking features rather than full scanning frameworks ([GitHub][1]).
 
 ---
 
 ## Use Cases
 
-* Quickly reviewing scan results during engagements
-* Demonstrating findings in a cleaner format
-* Reducing time spent parsing raw Nmap output
-* Lightweight alternative to heavier reporting tools
+* Quick internal network checks
+* Verifying firewall rules
+* Learning port scanning fundamentals
+* Lightweight alternative to tools like Nmap
 
 ---
 
 ## Limitations
 
-* Designed for standard Nmap output formats
-* May not support all edge-case scan configurations
-* UI functionality depends on browser compatibility
+* Slower than optimized tools like Nmap or Masscan
+* TCP-only (no UDP scanning unless extended)
+* Limited service detection
+* Not intended for large-scale scanning
+
+---
+
+## Future Improvements
+
+* Add UDP scanning support
+* Improve service detection
+* Add parallel scanning for speed
+* Input validation for targets and ports
 
 ---
 
@@ -138,3 +150,5 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 * NONINFRINGEMENT
 
 IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+[1]: https://github.com/mia0x1/portscan?utm_source=chatgpt.com "mia0x1/portscan: A simple TCP port scanner written in Bash."
